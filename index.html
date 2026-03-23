@@ -2,427 +2,293 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SOFIANSHOP | Premium Vapes</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&family=Syne:wght@800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Studio Pro | Business Suite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
-            --accent: #00ffcc;
-            --bg: #050505;
-            --card-bg: #111111;
-            --text: #ffffff;
-            --border: rgba(255, 255, 255, 0.08);
+            --accent: #0f172a;
+            --primary: #2563eb;
+            --surface: rgba(255, 255, 255, 0.9);
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.05);
         }
 
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-            -webkit-tap-highlight-color: transparent; 
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
 
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            line-height: 1.5;
-            overflow-x: hidden;
-        }
+        body { background: #f8fafc; color: var(--text-main); min-height: 100vh; padding-bottom: 40px; }
 
-        /* --- EFECTO HUMO DE FONDO --- */
-        .smoke-bg {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: -1;
-            background: radial-gradient(circle at 50% -20%, #1a1a1a, #050505);
-            opacity: 0.8;
-        }
+        /* Navbar */
+        nav { width: 100%; max-width: 1200px; margin: 0 auto; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 800; font-size: 1.5rem; display: flex; align-items: center; gap: 10px; color: var(--accent); }
 
-        .smoke-vignette {
-            position: fixed;
-            inset: 0;
-            background: url('https://www.transparenttextures.com/patterns/asfalt-dark.png');
-            opacity: 0.2;
-            pointer-events: none;
-        }
+        .container { width: 100%; max-width: 650px; margin: 0 auto; padding: 0 1rem; }
+        .card { background: var(--surface); backdrop-filter: blur(10px); border: 1px solid white; padding: 2rem; border-radius: 24px; box-shadow: var(--shadow); }
 
-        /* --- NAVEGACIÓN MOBILE-OPTIMIZED --- */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 5%;
-            position: sticky;
-            top: 0;
-            background: rgba(5, 5, 5, 0.8);
-            backdrop-filter: blur(15px);
-            z-index: 1000;
-            border-bottom: 1px solid var(--border);
-        }
+        /* Tabs */
+        .tabs { display: flex; background: #f1f5f9; padding: 5px; border-radius: 15px; margin-bottom: 1.5rem; }
+        .tab-btn { flex: 1; padding: 10px; border: none; border-radius: 12px; cursor: pointer; background: transparent; font-weight: 700; color: var(--text-light); transition: 0.3s; }
+        .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
-        .logo {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.2rem;
-            letter-spacing: -1px;
-            color: var(--accent);
-        }
+        /* Servicios */
+        .service-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
+        .service-item { padding: 12px; border: 2px solid var(--border); border-radius: 15px; cursor: pointer; text-align: center; background: white; transition: 0.2s; }
+        .service-item.selected { border-color: var(--primary); background: #eff6ff; color: var(--primary); }
+        .service-item small { display: block; font-size: 0.7rem; opacity: 0.7; }
 
-        .cart-trigger {
-            background: var(--accent);
-            color: #000;
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            font-weight: 800;
-            font-size: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
+        /* Grid de Horas */
+        .time-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; margin-top: 10px; }
+        .time-chip { padding: 10px; border: 2px solid var(--border); border-radius: 12px; cursor: pointer; text-align: center; font-weight: 700; font-size: 0.85rem; background: white; }
+        .time-chip.selected { background: var(--accent); color: white; border-color: var(--accent); }
+        .time-chip.disabled { background: #f1f5f9; color: #cbd5e1; cursor: not-allowed; text-decoration: line-through; border-color: #f1f5f9; }
 
-        /* --- MARQUESINA DINÁMICA --- */
-        .marquee {
-            background: var(--accent);
-            color: #000;
-            padding: 0.4rem 0;
-            font-weight: 800;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            overflow: hidden;
-            display: flex;
-        }
+        /* Form */
+        .form-group { margin-bottom: 1.2rem; }
+        label { display: block; margin-bottom: 5px; font-size: 0.8rem; font-weight: 700; color: var(--text-light); }
+        input { width: 100%; padding: 14px; border: 2px solid var(--border); border-radius: 15px; outline: none; }
+        input:focus { border-color: var(--primary); }
+        .primary-btn { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 15px; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 10px; }
 
-        .marquee-content {
-            display: flex;
-            white-space: nowrap;
-            animation: scroll 20s linear infinite;
-        }
+        /* Admin Dashboard */
+        .admin-container { max-width: 1000px; display: none; }
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 1.5rem; }
+        .stat-card { background: white; padding: 20px; border-radius: 20px; border: 1px solid var(--border); text-align: center; }
+        .stat-card span { font-size: 0.7rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; }
+        .stat-card h3 { font-size: 1.5rem; margin-top: 5px; color: var(--accent); }
 
-        .marquee-content span { margin-right: 3rem; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 15px; overflow: hidden; }
+        th { text-align: left; padding: 15px; font-size: 0.7rem; color: var(--text-light); text-transform: uppercase; border-bottom: 1px solid var(--border); }
+        td { padding: 15px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
 
-        @keyframes scroll {
-            from { transform: translateX(0); }
-            to { transform: translateX(-50%); }
-        }
+        .hidden { display: none !important; }
 
-        /* --- HERO SECTION --- */
-        header {
-            padding: 3rem 5% 1.5rem 5%;
-            text-align: left;
-        }
-
-        header h1 {
-            font-family: 'Syne', sans-serif;
-            font-size: 3rem;
-            line-height: 0.9;
-            margin-bottom: 1rem;
-        }
-
-        header p {
-            font-size: 0.9rem;
-            color: #888;
-            max-width: 80%;
-        }
-
-        /* --- PRODUCT GRID (RESPONSIVE) --- */
-        .shop-container {
-            padding: 1rem 5% 5rem 5%;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
-            gap: 1rem;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            transition: transform 0.3s ease;
-        }
-
-        .card:active { transform: scale(0.95); } 
-
-        .vaper-preview {
-            width: 100%;
-            aspect-ratio: 1/1;
-            background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
-            border-radius: 15px;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .vaper-preview::after {
-            content: '💨';
-            position: absolute;
-            font-size: 1.5rem;
-            top: 20%;
-            opacity: 0.2;
-            animation: puff 3s infinite;
-        }
-
-        @keyframes puff {
-            0% { transform: translateY(0) scale(1); opacity: 0; }
-            50% { opacity: 0.3; }
-            100% { transform: translateY(-20px) scale(1.5); opacity: 0; }
-        }
-
-        .card-info h3 {
-            font-size: 0.9rem;
-            font-weight: 800;
-            margin-bottom: 0.2rem;
-        }
-
-        .card-info p {
-            font-size: 0.7rem;
-            color: var(--accent);
-            margin-bottom: 0.8rem;
-            text-transform: uppercase;
-        }
-
-        .price-tag {
-            font-size: 1.1rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-        }
-
-        .add-btn {
-            width: 100%;
-            background: #ffffff;
-            color: #000;
-            border: none;
-            padding: 0.8rem;
-            border-radius: 12px;
-            font-weight: 800;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            cursor: pointer;
-        }
-
-        /* --- CARRITO MOBILE-DRAWER --- */
-        #cart-drawer {
-            position: fixed;
-            bottom: -100%;
-            left: 0;
-            width: 100%;
-            height: 80vh;
-            background: #0f0f0f;
-            border-top: 2px solid var(--accent);
-            z-index: 2000;
-            padding: 2rem;
-            border-radius: 30px 30px 0 0;
-            transition: bottom 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
-        }
-
-        #cart-drawer.open { bottom: 0; }
-
-        .cart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .cart-items-list {
-            max-height: 50vh;
-            overflow-y: auto;
-        }
-
-        .checkout-footer {
-            margin-top: 2rem;
-        }
-
-        .total-box {
-            display: flex;
-            justify-content: space-between;
-            font-size: 1.5rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-        }
-
-        footer {
-            padding: 2rem 5%;
-            text-align: center;
-            font-size: 0.7rem;
-            color: #444;
-            border-top: 1px solid var(--border);
-        }
-
-        @media (min-width: 768px) {
-            header h1 { font-size: 5rem; }
-            .grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
-            #cart-drawer { width: 400px; height: 100vh; right: -400px; left: auto; bottom: 0; border-radius: 0; border-left: 2px solid var(--accent); }
-            #cart-drawer.open { right: 0; }
+        /* ESTILOS DE IMPRESIÓN */
+        @media print {
+            body * { visibility: hidden; background: white !important; }
+            #printSection, #printSection * { visibility: visible; }
+            #printSection { position: absolute; left: 0; top: 0; width: 100%; }
+            .no-print { display: none !important; }
+            table { border: 1px solid #000; }
+            th, td { border-bottom: 1px solid #000; color: black !important; }
         }
     </style>
 </head>
 <body>
 
-    <div class="smoke-bg"></div>
-    <div class="smoke-vignette"></div>
-
-    <nav>
-        <div class="logo">SOFIAN★SHOP</div>
-        <div class="cart-trigger" onclick="toggleCart()">
-            🛒 <span id="cart-count">0</span>
-        </div>
+    <nav class="no-print">
+        <div class="logo"><i data-lucide="scissors"></i> ELITE STUDIO</div>
+        <button onclick="showSection('loginView')" style="background:none; border:none; cursor:pointer; font-weight:700">Staff Access</button>
     </nav>
 
-    <div class="marquee">
-        <div class="marquee-content">
-            <span>ENTREGA EN MANO +18</span> ⚡ <span>SABORES INTENSOS</span> ⚡ <span>PAGO CONTRAREEMBOLSO</span> ⚡ <span>LOS MEJORES PRECIOS</span> ⚡
-            <span>ENTREGA EN MANO +18</span> ⚡ <span>SABORES INTENSOS</span> ⚡ <span>PAGO CONTRAREEMBOLSO</span> ⚡ <span>LOS MEJORES PRECIOS</span> ⚡
-        </div>
-    </div>
-
-    <header>
-        <h1>VAPE<br><span style="color:var(--accent)">FRESH.</span></h1>
-        <p>Vapers desechables de alta calidad. El mejor sabor en la palma de tu mano.</p>
-    </header>
-
-    <main class="shop-container">
-        <div class="grid" id="product-list"></div>
-    </main>
-
-    <div id="cart-drawer">
-        <div class="cart-header">
-            <h2 style="font-family:'Syne'">TU COMPRA</h2>
-            <span onclick="toggleCart()" style="font-size: 0.8rem; background:#222; padding:0.5rem 1rem; border-radius:10px;">CERRAR</span>
-        </div>
-        <div class="cart-items-list" id="items">
+    <div class="container no-print" id="clientView">
+        <div class="card">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('reserva')">Reservar</button>
+                <button class="tab-btn" onclick="switchTab('anular')">Anular</button>
             </div>
-        <div class="checkout-footer">
-            <div class="total-box">
-                <span>TOTAL</span>
-                <span id="total-price" style="color:var(--accent)">0€</span>
+
+            <div id="tab-reserva">
+                <label>Servicio</label>
+                <div class="service-grid">
+                    <div class="service-item" onclick="selServ(this, 'Corte', 15, 40)">Corte <small>15€ • 40min</small></div>
+                    <div class="service-item" onclick="selServ(this, 'Corte+Barba', 25, 80)">Pack Barba <small>25€ • 80min</small></div>
+                    <div class="service-item" onclick="selServ(this, 'Tinte', 40, 120)">Tinte <small>40€ • 120min</small></div>
+                    <div class="service-item" onclick="selServ(this, 'Premium', 60, 160)">Completo <small>60€ • 160min</small></div>
+                </div>
+
+                <form id="bookForm">
+                    <div class="form-group"><label>DNI / NIE</label><input type="text" id="dni" required></div>
+                    <div class="form-group"><label>Teléfono</label><input type="tel" id="tel" required></div>
+                    <div class="form-group"><label>Fecha</label><input type="date" id="date" required onchange="genHours()"></div>
+                    <div class="form-group">
+                        <label>Hora (Intervalos 40min)</label>
+                        <div id="hGrid" class="time-grid"></div>
+                        <input type="hidden" id="selH" required>
+                    </div>
+                    <button type="submit" class="primary-btn">Confirmar Reserva</button>
+                </form>
             </div>
-            <button class="add-btn" style="background:var(--accent); font-size:1rem; padding:1.2rem;" onclick="openModal()">PEDIR POR WHATSAPP</button>
-            <p style="font-size:0.6rem; text-align:center; margin-top:1rem; color:#666;">Verificación de edad obligatoria al recibir el producto.</p>
+
+            <div id="tab-anular" class="hidden">
+                <input type="text" id="dniSearch" placeholder="Tu DNI">
+                <button onclick="findCita()" class="primary-btn">Buscar Cita</button>
+                <div id="searchRes" style="margin-top:15px"></div>
+            </div>
         </div>
     </div>
 
-    <!-- MODAL FORMULARIO -->
-    <div id="checkout-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:3000; padding:2rem;">
-        <div style="background:#111; padding:2rem; border-radius:20px; max-width:400px; margin:auto; margin-top:10vh;">
-            <h2 style="margin-bottom:1rem; color:var(--accent);">Finalizar pedido</h2>
-            <input id="name" placeholder="Nombre" style="width:100%; margin-bottom:1rem; padding:1rem; border:none; border-radius:10px;">
-            <input id="phone" placeholder="Teléfono" style="width:100%; margin-bottom:1rem; padding:1rem; border:none; border-radius:10px;">
-            <input id="address" placeholder="Dirección" style="width:100%; margin-bottom:1rem; padding:1rem; border:none; border-radius:10px;">
-            <textarea id="notes" placeholder="Observaciones (opcional)" style="width:100%; margin-bottom:1rem; padding:1rem; border:none; border-radius:10px;"></textarea>
-            <button class="add-btn" style="background:var(--accent);" onclick="sendWhatsApp()">Enviar pedido</button>
-            <button class="add-btn" style="margin-top:1rem; background:#222; color:white;" onclick="closeModal()">Cancelar</button>
+    <div class="container hidden no-print" id="loginView">
+        <div class="card">
+            <h2>Acceso Staff</h2>
+            <input type="text" id="u" placeholder="user" style="margin-bottom:10px">
+            <input type="password" id="p" placeholder="user" style="margin-bottom:10px">
+            <button onclick="login()" class="primary-btn">Entrar</button>
         </div>
     </div>
 
-    <footer>
-        SOFIANSHOP &copy; 2026<br>PROHIBIDA LA VENTA A MENORES
-    </footer>
+    <div class="container admin-container" id="adminDashboard">
+        <div class="stats no-print">
+            <div class="stat-card"><span>Citas Hoy</span><h3 id="countH">0</h3></div>
+            <div class="stat-card"><span>Caja Hoy</span><h3 id="cashH">0€</h3></div>
+            <div class="stat-card"><span>Siguiente Cliente</span><h3 id="nextC">--:--</h3></div>
+        </div>
+
+        <div class="card" id="printSection">
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px" class="no-print">
+                <h3>Agenda de Citas</h3>
+                <div style="display:flex; gap:10px">
+                    <input type="date" id="fDate" onchange="renderAdmin()">
+                    <button onclick="window.print()" class="primary-btn" style="margin:0; padding:10px">Imprimir</button>
+                    <button onclick="showSection('clientView')" class="primary-btn" style="margin:0; padding:10px; background:#f1f5f9; color:#000">X</button>
+                </div>
+            </div>
+            <table>
+                <thead><tr><th>Hora</th><th>Cliente</th><th>Servicio</th><th>Estado</th><th class="no-print">Acción</th></tr></thead>
+                <tbody id="aTable"></tbody>
+            </table>
+        </div>
+    </div>
 
     <script>
-        const vapers = [
-            { id: 1, name: "ICE MINT", price: 10, flavor: "Menta Helada", emoji: "❄️" },
-            { id: 2, name: "BLUE RAZZ", price: 12, flavor: "Arándanos", emoji: "🫐" },
-            { id: 3, name: "LUSH ICE", price: 10, flavor: "Sandía", emoji: "🍉" },
-            { id: 4, name: "GRAPE BOMB", price: 10, flavor: "Uva Dulce", emoji: "🍇" },
-            { id: 5, name: "MANGO GO", price: 12, flavor: "Mango Tropical", emoji: "🥭" },
-            { id: 6, name: "STRAWBERRY", price: 12, flavor: "Fresa", emoji: "🍓" }
-        ];
+        lucide.createIcons();
+        // INTERVALOS DE 40 MINUTOS
+        const SLOTS = ["09:00","09:40","10:20","11:00","11:40","12:20","13:00","16:00","16:40","17:20","18:00","18:40","19:20"];
+        let db = JSON.parse(localStorage.getItem('elite_v5')) || [];
+        let sServ = { n:'', p:0, d:40 };
 
-        let cart = [];
-
-        function init() {
-            const list = document.getElementById('product-list');
-            list.innerHTML = vapers.map(v => `
-                <div class="card">
-                    <div class="vaper-preview">${v.emoji}</div>
-                    <div class="card-info">
-                        <h3>${v.name}</h3>
-                        <p>${v.flavor}</p>
-                    </div>
-                    <div class="price-tag">${v.price}€</div>
-                    <button class="add-btn" onclick="add(${v.id})">Añadir al carrito</button>
-                </div>
-            `).join('');
+        function selServ(el, n, p, d) {
+            document.querySelectorAll('.service-item').forEach(i => i.classList.remove('selected'));
+            el.classList.add('selected');
+            sServ = { n, p, d };
+            genHours();
         }
 
-        function add(id) {
-            const product = vapers.find(x => x.id === id);
-            cart.push(product);
-            updateCart();
-            if(window.innerWidth < 768) toggleCart(); 
+        function genHours() {
+            const d = document.getElementById('date').value;
+            const grid = document.getElementById('hGrid');
+            grid.innerHTML = '';
+            if(!d) return;
+
+            // Ver qué horas están bloqueadas
+            let blocked = [];
+            db.filter(a => a.date === d).forEach(a => {
+                let idx = SLOTS.indexOf(a.time);
+                let numSlots = a.duration / 40;
+                for(let i=0; i < numSlots; i++) {
+                    if(SLOTS[idx + i]) blocked.push(SLOTS[idx + i]);
+                }
+            });
+
+            SLOTS.forEach(h => {
+                const isB = blocked.includes(h);
+                const chip = document.createElement('div');
+                chip.className = `time-chip ${isB ? 'disabled' : ''}`;
+                chip.textContent = h;
+                if(!isB) chip.onclick = () => {
+                    document.querySelectorAll('.time-chip').forEach(c => c.classList.remove('selected'));
+                    chip.classList.add('selected');
+                    document.getElementById('selH').value = h;
+                };
+                grid.appendChild(chip);
+            });
         }
 
-        function updateCart() {
-            document.getElementById('cart-count').innerText = cart.length;
-            const items = document.getElementById('items');
-            items.innerHTML = cart.map(i => `
-                <div class="cart-item">
-                    <span>${i.name}</span>
-                    <span style="font-weight:800">${i.price}€</span>
-                </div>
-            `).join('');
-            const total = cart.reduce((a, b) => a + b.price, 0);
-            document.getElementById('total-price').innerText = total + '€';
-        }
+        document.getElementById('bookForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const h = document.getElementById('selH').value;
+            if(!sServ.n || !h) return alert("Elige servicio y hora");
 
-        function toggleCart() {
-            document.getElementById('cart-drawer').classList.toggle('open');
-        }
+            db.push({
+                id: Date.now(),
+                dni: document.getElementById('dni').value,
+                tel: document.getElementById('tel').value,
+                date: document.getElementById('date').value,
+                time: h,
+                service: sServ.n,
+                price: sServ.p,
+                duration: sServ.d
+            });
+            localStorage.setItem('elite_v5', JSON.stringify(db));
+            alert("Reserva Realizada");
+            location.reload();
+        });
 
-        // --- MODAL + WHATSAPP ---
-        function openModal() {
-            if(cart.length === 0) {
-                alert('Tu carrito está vacío');
-                return;
+        function login() {
+            if(document.getElementById('u').value==='user' && document.getElementById('p').value==='user') {
+                showSection('adminDashboard');
+                renderAdmin();
             }
-            document.getElementById('checkout-modal').style.display = 'block';
         }
 
-        function closeModal() {
-            document.getElementById('checkout-modal').style.display = 'none';
+        function renderAdmin() {
+            const filter = document.getElementById('fDate').value;
+            const body = document.getElementById('aTable');
+            body.innerHTML = '';
+            
+            let hoy = new Date().toISOString().split('T')[0];
+            let list = filter ? db.filter(a => a.date === filter) : db.filter(a => a.date === hoy);
+            
+            // Stats
+            document.getElementById('countH').textContent = list.length;
+            document.getElementById('cashH').textContent = list.reduce((a,b)=>a+b.price,0) + "€";
+            
+            // Lógica Siguiente Cliente
+            let nowH = new Date().toLocaleTimeString('es-ES', {hour12:false, hour:'2-digit', minute:'2-digit'});
+            let next = list.filter(a => a.time > nowH).sort((a,b)=>a.time.localeCompare(b.time))[0];
+            document.getElementById('nextC').textContent = next ? next.time : "--:--";
+
+            list.sort((a,b)=>a.time.localeCompare(b.time)).forEach(a => {
+                body.innerHTML += `<tr>
+                    <td><strong>${a.time}</strong></td>
+                    <td>${a.dni}<br><small>${a.tel}</small></td>
+                    <td>${a.service}</td>
+                    <td><span style="color:green">Confirmado</span></td>
+                    <td class="no-print"><button onclick="del(${a.id})" style="color:red; border:none; background:none; cursor:pointer">Eliminar</button></td>
+                </tr>`;
+            });
         }
 
-        function sendWhatsApp() {
-            const name = document.getElementById('name').value.trim();
-            const phone = document.getElementById('phone').value.trim();
-            const address = document.getElementById('address').value.trim();
-            const notes = document.getElementById('notes').value.trim();
-
-            if(!name || !phone || !address) {
-                alert('Completa todos los campos obligatorios');
-                return;
+        function del(id) {
+            if(confirm("¿Borrar?")) {
+                db = db.filter(a => a.id !== id);
+                localStorage.setItem('elite_v5', JSON.stringify(db));
+                renderAdmin();
             }
-
-            const total = cart.reduce((a, b) => a + b.price, 0);
-
-            let order = cart.map(i => `- ${i.name} (${i.price}€)`).join('%0A');
-
-            let message = `Hola, quiero hacer un pedido:%0A%0A` +
-                          `Nombre: ${name}%0A` +
-                          `Teléfono: ${phone}%0A` +
-                          `Dirección: ${address}%0A`;
-
-            if(notes) {
-                message += `Observaciones: ${notes}%0A`;
-            }
-
-            message += `%0APedido:%0A${order}%0A%0ATotal: ${total}€`;
-
-            window.open(`https://wa.me/${number}?text=${message}`, '_blank');
         }
 
-        init();
+        function showSection(id) {
+            document.getElementById('clientView').classList.add('hidden');
+            document.getElementById('loginView').classList.add('hidden');
+            document.getElementById('adminDashboard').classList.add('hidden');
+            document.getElementById(id).classList.remove('hidden');
+            if(id==='adminDashboard') document.getElementById(id).style.display='block';
+        }
+
+        function switchTab(t) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('tab-reserva').classList.toggle('hidden', t!=='reserva');
+            document.getElementById('tab-anular').classList.toggle('hidden', t!=='anular');
+        }
+
+        function findCita() {
+            const d = document.getElementById('dniSearch').value;
+            const c = db.find(a => a.dni === d);
+            const res = document.getElementById('searchRes');
+            if(!c) return res.innerHTML = "No encontrado";
+            res.innerHTML = `<div class="card" style="background:#f1f5f9">
+                <p><strong>${c.service}</strong></p>
+                <p>${c.date} a las ${c.time}</p>
+                <button onclick="del(${c.id})" style="color:red; border:none; background:none; cursor:pointer; margin-top:10px">Anular cita</button>
+            </div>`;
+        }
+
+        // Configuración inicial
+        document.getElementById('date').min = new Date().toISOString().split('T')[0];
+        document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
     </script>
 </body>
 </html>
