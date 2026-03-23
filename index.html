@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SOFIANSHOP | Premium Vapes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&family=Syne:wght@800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #00ffcc;
+            --bg: #050505;
+            --card-bg: #111111;
+            --text: #ffffff;
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* --- EFECTO HUMO DE FONDO --- */
+        .smoke-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 50% -20%, #1a1a1a, #050505);
+            opacity: 0.8;
+        }
+
+        .smoke-vignette {
+            position: fixed;
+            inset: 0;
+            background: url('https://www.transparenttextures.com/patterns/asfalt-dark.png');
+            opacity: 0.2;
+            pointer-events: none;
+        }
+
+        /* --- NAVEGACIÓN MOBILE-OPTIMIZED --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            position: sticky;
+            top: 0;
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.2rem;
+            letter-spacing: -1px;
+            color: var(--accent);
+        }
+
+        .cart-trigger {
+            background: var(--accent);
+            color: #000;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* --- MARQUESINA DINÁMICA --- */
+        .marquee {
+            background: var(--accent);
+            color: #000;
+            padding: 0.4rem 0;
+            font-weight: 800;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .marquee-content {
+            display: flex;
+            white-space: nowrap;
+            animation: scroll 20s linear infinite;
+        }
+
+        .marquee-content span { margin-right: 3rem; }
+
+        @keyframes scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        /* --- HERO SECTION --- */
+        header {
+            padding: 3rem 5% 1.5rem 5%;
+            text-align: left;
+        }
+
+        header h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 3rem;
+            line-height: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        header p {
+            font-size: 0.9rem;
+            color: #888;
+            max-width: 80%;
+        }
+
+        /* --- PRODUCT GRID (RESPONSIVE) --- */
+        .shop-container {
+            padding: 1rem 5% 5rem 5%;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
+            gap: 1rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .card:active { transform: scale(0.95); } 
+
+        .vaper-preview {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vaper-preview::after {
+            content: '💨';
+            position: absolute;
+            font-size: 1.5rem;
+            top: 20%;
+            opacity: 0.2;
+            animation: puff 3s infinite;
+        }
+
+        @keyframes puff {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            50% { opacity: 0.3; }
+            100% { transform: translateY(-20px) scale(1.5); opacity: 0; }
+        }
+
+        .card-info h3 {
+            font-size: 0.9rem;
+            font-weight: 800;
+            margin-bottom: 0.2rem;
+        }
+
+        .card-info p {
+            font-size: 0.7rem;
+            color: var(--accent);
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .price-tag {
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .add-btn {
+            width: 100%;
+            background: #ffffff;
+            color: #000;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        /* --- CARRITO MOBILE-DRAWER --- */
+        #cart-drawer {
+            position: fixed;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            height: 80vh;
+            background: #0f0f0f;
+            border-top: 2px solid var(--accent);
+            z-index: 2000;
+            padding: 2rem;
+            border-radius: 30px 30px 0 0;
+            transition: bottom 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
+        }
+
+        #cart-drawer.open { bottom: 0; }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .cart-items-list {
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .checkout-footer {
+            margin-top: 2rem;
+        }
+
+        .total-box {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        footer {
+            padding: 2rem 5%;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #444;
+            border-top: 1px solid var(--border);
+        }
+
+        @media (min-width: 768px) {
+            header h1 { font-size: 5rem; }
+            .grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+            #cart-drawer { width: 400px; height: 100vh; right: -400px; left: auto; bottom: 0; border-radius: 0; border-left: 2px solid var(--accent); }
+            #cart-drawer.open { right: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="smoke-bg"></div>
+    <div class="smoke-vignette"></div>
+
+    <nav>
+        <div class="logo">SOFIAN★SHOP</div>
+        <div class="cart-trigger" onclick="toggleCart()">
+            🛒 <span id="cart-count">0</span>
+        </div>
+    </nav>
+
+    <div class="marquee">
+        <div class="marquee-content">
+            <span>ENTREGA EN MANO +18</span> ⚡ <span>SABORES INTENSOS</span> ⚡ <span>PAGO CONTRAREEMBOLSO</span> ⚡ <span>LOS MEJORES PRECIOS</span> ⚡
+            <span>ENTREGA EN MANO +18</span> ⚡ <span>SABORES INTENSOS</span> ⚡ <span>PAGO CONTRAREEMBOLSO</span> ⚡ <span>LOS MEJORES PRECIOS</span> ⚡
+        </div>
+    </div>
+
+    <header>
+        <h1>VAPE<br><span style="color:var(--accent)">FRESH.</span></h1>
+        <p>Vapers desechables de alta calidad. El mejor sabor en la palma de tu mano.</p>
+    </header>
+
+    <main class="shop-container">
+        <div class="grid" id="product-list"></div>
+    </main>
+
+    <div id="cart-drawer">
+        <div class="cart-header">
+            <h2 style="font-family:'Syne'">TU COMPRA</h2>
+            <span onclick="toggleCart()" style="font-size: 0.8rem; background:#222; padding:0.5rem 1rem; border-radius:10px;">CERRAR</span>
+        </div>
+        <div class="cart-items-list" id="items">
+            </div>
+        <div class="checkout-footer">
+            <div class="total-box">
+                <span>TOTAL</span>
+                <span id="total-price" style="color:var(--accent)">0€</span>
+            </div>
+            <button class="add-btn" style="background:var(--accent); font-size:1rem; padding:1.2rem;" onclick="openModal()">PEDIR POR WHATSAPP</button>
+            <p style="font-size:0.6rem; text-align:center; margin-top:1rem; color:#666;">Verificación de edad obligatoria al recibir el producto.</p>
+        </div>
+    </div>
+
+    <!-- MODAL FORMULARIO -->
+    <div id="checkout-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:3000; padding:2rem;">
+        <div style="background:#111; padding:2rem; border-radius:20px; max-width:400px; margin:auto; margin-top:10vh;">
+            <h2 style="margin-bottom:1rem; color:var(--accent);">Finalizar pedido</h2>
+            <input id="name" placeholder="Nombre" style="width:100%; margin-bottom:1rem; padding:1rem; border:none; border-radius:10px;">
+            <input id="phone" placeholder="Teléfono" style="width:100%; margin-bottom:1rem; padding:1rem; border:none; border-radius:10px;">
+            <input id="address" placeholder="Dirección" style="width:100%; margin-bottom:1rem; padding:1rem; border:none; border-radius:10px;">
+            <textarea id="notes" placeholder="Observaciones (opcional)" style="width:100%; margin-bottom:1rem; padding:1rem; border:none; border-radius:10px;"></textarea>
+            <button class="add-btn" style="background:var(--accent);" onclick="sendWhatsApp()">Enviar pedido</button>
+            <button class="add-btn" style="margin-top:1rem; background:#222; color:white;" onclick="closeModal()">Cancelar</button>
+        </div>
+    </div>
+
+    <footer>
+        SOFIANSHOP &copy; 2026<br>PROHIBIDA LA VENTA A MENORES
+    </footer>
+
+    <script>
+        const vapers = [
+            { id: 1, name: "ICE MINT", price: 10, flavor: "Menta Helada", emoji: "❄️" },
+            { id: 2, name: "BLUE RAZZ", price: 12, flavor: "Arándanos", emoji: "🫐" },
+            { id: 3, name: "LUSH ICE", price: 10, flavor: "Sandía", emoji: "🍉" },
+            { id: 4, name: "GRAPE BOMB", price: 10, flavor: "Uva Dulce", emoji: "🍇" },
+            { id: 5, name: "MANGO GO", price: 12, flavor: "Mango Tropical", emoji: "🥭" },
+            { id: 6, name: "STRAWBERRY", price: 12, flavor: "Fresa", emoji: "🍓" }
+        ];
+
+        let cart = [];
+
+        function init() {
+            const list = document.getElementById('product-list');
+            list.innerHTML = vapers.map(v => `
+                <div class="card">
+                    <div class="vaper-preview">${v.emoji}</div>
+                    <div class="card-info">
+                        <h3>${v.name}</h3>
+                        <p>${v.flavor}</p>
+                    </div>
+                    <div class="price-tag">${v.price}€</div>
+                    <button class="add-btn" onclick="add(${v.id})">Añadir al carrito</button>
+                </div>
+            `).join('');
+        }
+
+        function add(id) {
+            const product = vapers.find(x => x.id === id);
+            cart.push(product);
+            updateCart();
+            if(window.innerWidth < 768) toggleCart(); 
+        }
+
+        function updateCart() {
+            document.getElementById('cart-count').innerText = cart.length;
+            const items = document.getElementById('items');
+            items.innerHTML = cart.map(i => `
+                <div class="cart-item">
+                    <span>${i.name}</span>
+                    <span style="font-weight:800">${i.price}€</span>
+                </div>
+            `).join('');
+            const total = cart.reduce((a, b) => a + b.price, 0);
+            document.getElementById('total-price').innerText = total + '€';
+        }
+
+        function toggleCart() {
+            document.getElementById('cart-drawer').classList.toggle('open');
+        }
+
+        // --- MODAL + WHATSAPP ---
+        function openModal() {
+            if(cart.length === 0) {
+                alert('Tu carrito está vacío');
+                return;
+            }
+            document.getElementById('checkout-modal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('checkout-modal').style.display = 'none';
+        }
+
+        function sendWhatsApp() {
+            const name = document.getElementById('name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const notes = document.getElementById('notes').value.trim();
+
+            if(!name || !phone || !address) {
+                alert('Completa todos los campos obligatorios');
+                return;
+            }
+
+            const total = cart.reduce((a, b) => a + b.price, 0);
+
+            let order = cart.map(i => `- ${i.name} (${i.price}€)`).join('%0A');
+
+            let message = `Hola, quiero hacer un pedido:%0A%0A` +
+                          `Nombre: ${name}%0A` +
+                          `Teléfono: ${phone}%0A` +
+                          `Dirección: ${address}%0A`;
+
+            if(notes) {
+                message += `Observaciones: ${notes}%0A`;
+            }
+
+            message += `%0APedido:%0A${order}%0A%0ATotal: ${total}€`;
+
+            const number = '34684133975'; // Cambia por el número del vendedor
+            window.open(`https://wa.me/${number}?text=${message}`, '_blank');
+        }
+
+        init();
+    </script>
+</body>
+</html>
