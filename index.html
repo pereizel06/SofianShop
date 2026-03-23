@@ -3,84 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elite Studio Pro | Business Suite</title>
+    <title>Elite Studio Pro | Sincronización Automática</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/gun/gun.js"></script>
     <style>
-        :root {
-            --accent: #0f172a;
-            --primary: #2563eb;
-            --surface: rgba(255, 255, 255, 0.9);
-            --text-main: #1e293b;
-            --text-light: #64748b;
-            --border: #e2e8f0;
-            --shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.05);
-        }
-
+        :root { --accent: #0f172a; --primary: #2563eb; --border: #e2e8f0; --text-light: #64748b; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-
-        body { background: #f8fafc; color: var(--text-main); min-height: 100vh; padding-bottom: 40px; }
-
-        /* Navbar */
-        nav { width: 100%; max-width: 1200px; margin: 0 auto; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-weight: 800; font-size: 1.5rem; display: flex; align-items: center; gap: 10px; color: var(--accent); }
-
+        body { background: #f8fafc; color: #1e293b; min-height: 100vh; padding-bottom: 40px; }
+        nav { max-width: 1200px; margin: 0 auto; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 800; font-size: 1.5rem; color: var(--accent); display: flex; align-items: center; gap: 8px; }
         .container { width: 100%; max-width: 650px; margin: 0 auto; padding: 0 1rem; }
-        .card { background: var(--surface); backdrop-filter: blur(10px); border: 1px solid white; padding: 2rem; border-radius: 24px; box-shadow: var(--shadow); }
-
-        /* Tabs */
+        .card { background: white; padding: 2rem; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid white; }
         .tabs { display: flex; background: #f1f5f9; padding: 5px; border-radius: 15px; margin-bottom: 1.5rem; }
-        .tab-btn { flex: 1; padding: 10px; border: none; border-radius: 12px; cursor: pointer; background: transparent; font-weight: 700; color: var(--text-light); transition: 0.3s; }
+        .tab-btn { flex: 1; padding: 10px; border: none; border-radius: 12px; cursor: pointer; background: transparent; font-weight: 700; color: var(--text-light); }
         .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-
-        /* Servicios */
         .service-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
-        .service-item { padding: 12px; border: 2px solid var(--border); border-radius: 15px; cursor: pointer; text-align: center; background: white; transition: 0.2s; }
+        .service-item { padding: 12px; border: 2px solid var(--border); border-radius: 15px; cursor: pointer; text-align: center; transition: 0.2s; }
         .service-item.selected { border-color: var(--primary); background: #eff6ff; color: var(--primary); }
-        .service-item small { display: block; font-size: 0.7rem; opacity: 0.7; }
-
-        /* Grid de Horas */
-        .time-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; margin-top: 10px; }
-        .time-chip { padding: 10px; border: 2px solid var(--border); border-radius: 12px; cursor: pointer; text-align: center; font-weight: 700; font-size: 0.85rem; background: white; }
+        .time-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap: 8px; margin-top: 10px; }
+        .time-chip { padding: 12px; border: 2px solid var(--border); border-radius: 12px; cursor: pointer; text-align: center; font-weight: 700; font-size: 0.85rem; }
         .time-chip.selected { background: var(--accent); color: white; border-color: var(--accent); }
-        .time-chip.disabled { background: #f1f5f9; color: #cbd5e1; cursor: not-allowed; text-decoration: line-through; border-color: #f1f5f9; }
-
-        /* Form */
-        .form-group { margin-bottom: 1.2rem; }
+        .time-chip.disabled { background: #f1f5f9; color: #cbd5e1; cursor: not-allowed; text-decoration: line-through; }
+        .primary-btn { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 16px; font-weight: 800; cursor: pointer; margin-top: 15px; }
+        .form-group { margin-bottom: 1rem; }
         label { display: block; margin-bottom: 5px; font-size: 0.8rem; font-weight: 700; color: var(--text-light); }
         input { width: 100%; padding: 14px; border: 2px solid var(--border); border-radius: 15px; outline: none; }
-        input:focus { border-color: var(--primary); }
-        .primary-btn { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 15px; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-
-        /* Admin Dashboard */
         .admin-container { max-width: 1000px; display: none; }
         .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 1.5rem; }
-        .stat-card { background: white; padding: 20px; border-radius: 20px; border: 1px solid var(--border); text-align: center; }
-        .stat-card span { font-size: 0.7rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; }
-        .stat-card h3 { font-size: 1.5rem; margin-top: 5px; color: var(--accent); }
-
+        .stat-card { background: white; padding: 20px; border-radius: 20px; text-align: center; border: 1px solid var(--border); }
         table { width: 100%; border-collapse: collapse; background: white; border-radius: 15px; overflow: hidden; }
-        th { text-align: left; padding: 15px; font-size: 0.7rem; color: var(--text-light); text-transform: uppercase; border-bottom: 1px solid var(--border); }
-        td { padding: 15px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
-
+        th { text-align: left; padding: 15px; font-size: 0.7rem; border-bottom: 1px solid var(--border); text-transform: uppercase; }
+        td { padding: 15px; border-bottom: 1px solid #f8fafc; font-size: 0.9rem; }
         .hidden { display: none !important; }
-
-        /* ESTILOS DE IMPRESIÓN */
-        @media print {
-            body * { visibility: hidden; background: white !important; }
-            #printSection, #printSection * { visibility: visible; }
-            #printSection { position: absolute; left: 0; top: 0; width: 100%; }
-            .no-print { display: none !important; }
-            table { border: 1px solid #000; }
-            th, td { border-bottom: 1px solid #000; color: black !important; }
-        }
+        @media print { .no-print { display: none !important; } .card { border: 1px solid #000; box-shadow: none; } }
     </style>
 </head>
 <body>
 
     <nav class="no-print">
         <div class="logo"><i data-lucide="scissors"></i> ELITE STUDIO</div>
-        <button onclick="showSection('loginView')" style="background:none; border:none; cursor:pointer; font-weight:700">Staff Access</button>
+        <button onclick="showSection('loginView')" style="background:none; border:none; cursor:pointer; font-weight:700; color:var(--text-light)">Acceso Staff</button>
     </nav>
 
     <div class="container no-print" id="clientView">
@@ -91,18 +54,17 @@
             </div>
 
             <div id="tab-reserva">
-                <label>Servicio</label>
                 <div class="service-grid">
-                    <div class="service-item" onclick="selServ(this, 'Corte', 15, 40)">Corte <small>15€ • 40min</small></div>
-                    <div class="service-item" onclick="selServ(this, 'Corte+Barba', 25, 80)">Pack Barba <small>25€ • 80min</small></div>
-                    <div class="service-item" onclick="selServ(this, 'Tinte', 40, 120)">Tinte <small>40€ • 120min</small></div>
-                    <div class="service-item" onclick="selServ(this, 'Premium', 60, 160)">Completo <small>60€ • 160min</small></div>
+                    <div class="service-item" onclick="selServ(this, 'Corte', 15, 40)">Corte <br><small>15€ • 40m</small></div>
+                    <div class="service-item" onclick="selServ(this, 'Corte+Barba', 25, 80)">Pack <br><small>25€ • 80m</small></div>
+                    <div class="service-item" onclick="selServ(this, 'Tinte', 40, 120)">Tinte <br><small>40€ • 120m</small></div>
+                    <div class="service-item" onclick="selServ(this, 'Elite', 60, 160)">Elite <br><small>60€ • 160m</small></div>
                 </div>
 
-                <form id="bookForm">
-                    <div class="form-group"><label>DNI / NIE</label><input type="text" id="dni" required></div>
+                <form onsubmit="event.preventDefault(); saveBooking();">
+                    <div class="form-group"><label>DNI</label><input type="text" id="dni" required></div>
                     <div class="form-group"><label>Teléfono</label><input type="tel" id="tel" required></div>
-                    <div class="form-group"><label>Fecha</label><input type="date" id="date" required onchange="genHours()"></div>
+                    <div class="form-group"><label>Fecha</label><input type="date" id="date" required onchange="renderHours()"></div>
                     <div class="form-group">
                         <label>Hora (Intervalos 40min)</label>
                         <div id="hGrid" class="time-grid"></div>
@@ -113,16 +75,16 @@
             </div>
 
             <div id="tab-anular" class="hidden">
-                <input type="text" id="dniSearch" placeholder="Tu DNI">
-                <button onclick="findCita()" class="primary-btn">Buscar Cita</button>
+                <input type="text" id="dniSearch" placeholder="Escribe tu DNI">
+                <button onclick="findCita()" class="primary-btn">Buscar mi Cita</button>
                 <div id="searchRes" style="margin-top:15px"></div>
             </div>
         </div>
     </div>
 
     <div class="container hidden no-print" id="loginView">
-        <div class="card">
-            <h2>Acceso Staff</h2>
+        <div class="card" style="max-width:400px; margin:auto">
+            <h2>Acceso Privado</h2>
             <input type="text" id="u" placeholder="user" style="margin-bottom:10px">
             <input type="password" id="p" placeholder="user" style="margin-bottom:10px">
             <button onclick="login()" class="primary-btn">Entrar</button>
@@ -131,14 +93,13 @@
 
     <div class="container admin-container" id="adminDashboard">
         <div class="stats no-print">
-            <div class="stat-card"><span>Citas Hoy</span><h3 id="countH">0</h3></div>
-            <div class="stat-card"><span>Caja Hoy</span><h3 id="cashH">0€</h3></div>
-            <div class="stat-card"><span>Siguiente Cliente</span><h3 id="nextC">--:--</h3></div>
+            <div class="stat-card"><span>Citas</span><h3 id="countH">0</h3></div>
+            <div class="stat-card"><span>Caja</span><h3 id="cashH">0€</h3></div>
+            <div class="stat-card"><span>Siguiente</span><h3 id="nextC">--:--</h3></div>
         </div>
-
         <div class="card" id="printSection">
             <div style="display:flex; justify-content:space-between; margin-bottom:15px" class="no-print">
-                <h3>Agenda de Citas</h3>
+                <h3>Agenda Global</h3>
                 <div style="display:flex; gap:10px">
                     <input type="date" id="fDate" onchange="renderAdmin()">
                     <button onclick="window.print()" class="primary-btn" style="margin:0; padding:10px">Imprimir</button>
@@ -146,39 +107,58 @@
                 </div>
             </div>
             <table>
-                <thead><tr><th>Hora</th><th>Cliente</th><th>Servicio</th><th>Estado</th><th class="no-print">Acción</th></tr></thead>
+                <thead><tr><th>Hora</th><th>DNI</th><th>Servicio</th><th class="no-print">Borrar</th></tr></thead>
                 <tbody id="aTable"></tbody>
             </table>
         </div>
     </div>
 
     <script>
-        lucide.createIcons();
-        // INTERVALOS DE 40 MINUTOS
+        // CONFIGURACIÓN P2P (Sin registro, sin nada)
+        const gun = Gun(['https://gun-manhattan.herokuapp.com/gun']);
+        const appData = gun.get('salon_elite_2026_oficial'); // Nombre de sala única
+
         const SLOTS = ["09:00","09:40","10:20","11:00","11:40","12:20","13:00","16:00","16:40","17:20","18:00","18:40","19:20"];
-        let db = JSON.parse(localStorage.getItem('elite_v5')) || [];
+        let citas = {};
         let sServ = { n:'', p:0, d:40 };
 
-        function selServ(el, n, p, d) {
-            document.querySelectorAll('.service-item').forEach(i => i.classList.remove('selected'));
-            el.classList.add('selected');
-            sServ = { n, p, d };
-            genHours();
+        // ESCUCHAR DATOS EN TIEMPO REAL
+        appData.map().on((data, id) => {
+            if (data) citas[id] = data;
+            else delete citas[id];
+            renderHours();
+            renderAdmin();
+        });
+
+        function saveBooking() {
+            const h = document.getElementById('selH').value;
+            const d = document.getElementById('date').value;
+            if(!sServ.n || !h) return alert("Selecciona servicio y hora");
+
+            const id = Math.random().toString(36).substr(2, 9);
+            appData.get(id).put({
+                dni: document.getElementById('dni').value,
+                tel: document.getElementById('tel').value,
+                date: d,
+                time: h,
+                service: sServ.n,
+                price: sServ.p,
+                duration: sServ.d
+            });
+            alert("Reserva enviada a todos los dispositivos");
         }
 
-        function genHours() {
-            const d = document.getElementById('date').value;
+        function renderHours() {
+            const date = document.getElementById('date').value;
             const grid = document.getElementById('hGrid');
+            if(!grid || !date) return;
             grid.innerHTML = '';
-            if(!d) return;
 
-            // Ver qué horas están bloqueadas
             let blocked = [];
-            db.filter(a => a.date === d).forEach(a => {
-                let idx = SLOTS.indexOf(a.time);
-                let numSlots = a.duration / 40;
-                for(let i=0; i < numSlots; i++) {
-                    if(SLOTS[idx + i]) blocked.push(SLOTS[idx + i]);
+            Object.values(citas).filter(c => c.date === date).forEach(c => {
+                let idx = SLOTS.indexOf(c.time);
+                for(let i=0; i < (c.duration/40); i++) {
+                    if(SLOTS[idx+i]) blocked.push(SLOTS[idx+i]);
                 }
             });
 
@@ -188,7 +168,7 @@
                 chip.className = `time-chip ${isB ? 'disabled' : ''}`;
                 chip.textContent = h;
                 if(!isB) chip.onclick = () => {
-                    document.querySelectorAll('.time-chip').forEach(c => c.classList.remove('selected'));
+                    document.querySelectorAll('.time-chip').forEach(x => x.classList.remove('selected'));
                     chip.classList.add('selected');
                     document.getElementById('selH').value = h;
                 };
@@ -196,65 +176,43 @@
             });
         }
 
-        document.getElementById('bookForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const h = document.getElementById('selH').value;
-            if(!sServ.n || !h) return alert("Elige servicio y hora");
-
-            db.push({
-                id: Date.now(),
-                dni: document.getElementById('dni').value,
-                tel: document.getElementById('tel').value,
-                date: document.getElementById('date').value,
-                time: h,
-                service: sServ.n,
-                price: sServ.p,
-                duration: sServ.d
-            });
-            localStorage.setItem('elite_v5', JSON.stringify(db));
-            alert("Reserva Realizada");
-            location.reload();
-        });
-
-        function login() {
-            if(document.getElementById('u').value==='user' && document.getElementById('p').value==='user') {
-                showSection('adminDashboard');
-                renderAdmin();
-            }
-        }
-
         function renderAdmin() {
-            const filter = document.getElementById('fDate').value;
             const body = document.getElementById('aTable');
+            if(!body) return;
             body.innerHTML = '';
+            const filter = document.getElementById('fDate').value;
             
-            let hoy = new Date().toISOString().split('T')[0];
-            let list = filter ? db.filter(a => a.date === filter) : db.filter(a => a.date === hoy);
+            let list = Object.entries(citas).map(([id, val]) => ({id, ...val}))
+                       .filter(c => c.date === filter);
             
             // Stats
             document.getElementById('countH').textContent = list.length;
             document.getElementById('cashH').textContent = list.reduce((a,b)=>a+b.price,0) + "€";
             
-            // Lógica Siguiente Cliente
-            let nowH = new Date().toLocaleTimeString('es-ES', {hour12:false, hour:'2-digit', minute:'2-digit'});
-            let next = list.filter(a => a.time > nowH).sort((a,b)=>a.time.localeCompare(b.time))[0];
-            document.getElementById('nextC').textContent = next ? next.time : "--:--";
-
-            list.sort((a,b)=>a.time.localeCompare(b.time)).forEach(a => {
+            list.sort((a,b)=>a.time.localeCompare(b.time)).forEach(c => {
                 body.innerHTML += `<tr>
-                    <td><strong>${a.time}</strong></td>
-                    <td>${a.dni}<br><small>${a.tel}</small></td>
-                    <td>${a.service}</td>
-                    <td><span style="color:green">Confirmado</span></td>
-                    <td class="no-print"><button onclick="del(${a.id})" style="color:red; border:none; background:none; cursor:pointer">Eliminar</button></td>
+                    <td><strong>${c.time}</strong></td>
+                    <td>${c.dni}</td>
+                    <td>${c.service}</td>
+                    <td class="no-print"><button onclick="deleteCita('${c.id}')" style="color:red; border:none; background:none; cursor:pointer">X</button></td>
                 </tr>`;
             });
         }
 
-        function del(id) {
-            if(confirm("¿Borrar?")) {
-                db = db.filter(a => a.id !== id);
-                localStorage.setItem('elite_v5', JSON.stringify(db));
+        function deleteCita(id) {
+            if(confirm("¿Eliminar?")) appData.get(id).put(null);
+        }
+
+        function selServ(el, n, p, d) {
+            document.querySelectorAll('.service-item').forEach(i => i.classList.remove('selected'));
+            el.classList.add('selected');
+            sServ = { n, p, d };
+            renderHours();
+        }
+
+        function login() {
+            if(document.getElementById('u').value==='user' && document.getElementById('p').value==='user') {
+                showSection('adminDashboard');
                 renderAdmin();
             }
         }
@@ -275,20 +233,20 @@
         }
 
         function findCita() {
-            const d = document.getElementById('dniSearch').value;
-            const c = db.find(a => a.dni === d);
+            const dni = document.getElementById('dniSearch').value;
+            const c = Object.entries(citas).find(([id, v]) => v.dni === dni);
             const res = document.getElementById('searchRes');
-            if(!c) return res.innerHTML = "No encontrado";
+            if(!c) return res.innerHTML = "No encontrada";
             res.innerHTML = `<div class="card" style="background:#f1f5f9">
-                <p><strong>${c.service}</strong></p>
-                <p>${c.date} a las ${c.time}</p>
-                <button onclick="del(${c.id})" style="color:red; border:none; background:none; cursor:pointer; margin-top:10px">Anular cita</button>
+                <p><strong>${c[1].service}</strong></p>
+                <p>${c[1].date} - ${c[1].time}</p>
+                <button onclick="deleteCita('${c[0]}')" style="color:red; cursor:pointer">Anular</button>
             </div>`;
         }
 
-        // Configuración inicial
         document.getElementById('date').min = new Date().toISOString().split('T')[0];
         document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
+        lucide.createIcons();
     </script>
 </body>
 </html>
